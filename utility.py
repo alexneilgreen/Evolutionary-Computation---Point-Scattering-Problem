@@ -4,7 +4,7 @@ This is the utility file where commonly used helper
 functions are stored for our Point-Scattering 
 Problem implementations.
 """
-# Import other necessary standard libraries or third-party packages below this line
+# Standard libraries or third-party packages
 
 def main():
     """Main function of the script."""

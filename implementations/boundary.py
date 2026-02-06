@@ -3,7 +3,7 @@
 This is the custom boundary implementation for the Point-Scattering 
 Problem.
 """
-# Import other necessary standard libraries or third-party packages below this line
+# Standard libraries or third-party packages
 
 def main():
     """Main function of the script."""
