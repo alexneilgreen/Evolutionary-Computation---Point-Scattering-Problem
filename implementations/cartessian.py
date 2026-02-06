@@ -5,9 +5,8 @@ Problem.
 """
 # Standard libraries or third-party packages
 
-def main():
-    """Main function of the script."""
-    
+# Local Imports
+import utility
 
-if __name__ == "__main__":
-    main()
+def run():
+    """Runs the cartessian implementation."""

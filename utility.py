@@ -6,9 +6,4 @@ Problem implementations.
 """
 # Standard libraries or third-party packages
 
-def main():
-    """Main function of the script."""
-    
-
-if __name__ == "__main__":
-    main()
+# Insert commonly used functions here.
