@@ -10,14 +10,13 @@ than one implementation are stored within the utility.py file.
 # Standard libraries or third-party packages
 
 import argparse
+from email import parser
 import os
 import random
 import numpy as np
 
 # Local Imports
-import cartesian
-import polar
-import boundary
+from implementations import cartesian, polar, boundary
 
 def setup_directories():
     """Create necessary directories for outputs"""
