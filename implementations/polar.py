@@ -8,5 +8,10 @@ Problem.
 # Local Imports
 import utility
 
+# Will need to handle for this specific representation
+# 1. Generating population of our individuals points 
+# 2. Evaluating Fitness level i.e maximum minimum-distance between point pairs
+# 3. Mutating the individuals
+
 def run():
     """Runs the cartessian implementation."""
