@@ -25,8 +25,16 @@ def setup_directories():
 
 def main():
     """Main function of the script."""
-    # n values for experiment
-    N = [10, 25, 5]
+    parser = argparse.ArgumentParser(
+        description='Point Scattering Problem - GA Comparison of Three Representations'
+    )
+
+    parser.add_argument('--n', type=int, default=5,                     # Set third custom n value
+                        help='Number of points to place (default: 5)')
+    parser.add_argument('--indpb', type=float, default=0.2,             # Set indpb value
+                        help='Independent probability for mutating each gene (default: 0.2)')
+    parser.add_argument('--seed', type=int, default=42,                 # Set seed value (shouldn't change)
+                        help='Random seed for reproducibility (default: 42)')
     
     args = parser.parse_args()
     
@@ -36,7 +44,7 @@ def main():
     # Set seed
     random.seed(args.seed)
     np.random.seed(args.seed)
-
+    
     # Run Cartesian Implementation
     print("===== Cartesian Implementation (x, y) =====\n")
     cartesian.run(args)

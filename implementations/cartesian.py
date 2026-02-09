@@ -4,9 +4,9 @@ This is the cartessian implementation for the Point-Scattering
 Problem.
 """
 # Standard libraries or third-party packages
+import random
 
 # Local Imports
-import random
 import utility
 
 def init_cartesian_ind(n):

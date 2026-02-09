@@ -7,18 +7,12 @@ Problem implementations.
 # Standard libraries or third-party packages
 from dataclasses import dataclass, asdict   # Used for the GA parameters
 from typing import Optional
+import math                                 # For calculations
+import matplotlib.pyplot as plt             # For plots
+from deap import base, creator, tools       # DEAP and helpers
 
 # Local Imports
 from implementations import cartesian, polar, boundary
-
-# For calculations
-import math
-
-# Plots
-import matplotlib.pyplot as plt
-
-# DEAP and helpers
-from deap import base, creator, tools
 
 # ===================== MATHEMATICAL FORMULAS =====================
 # Insert commonly used functions here.
@@ -42,12 +36,12 @@ def calcMinEuclideanDistance(points):
             dx_squared = dx*dx
             dy_squared = dy*dy
 
-            d = math.sqrt((dx_squared) + (dy_squared))   # Replace with Euclidean Distance Formula
+            d = math.sqrt((dx_squared) + (dy_squared))   # Euclidean Distance Formula
 
             if d < min_dist:
                 min_dist = d
 
-            return min_dist
+    return min_dist
 
 # Formula: (r*cos(theta), r*sin(theta))
 def polar_to_cart(ind):
