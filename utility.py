@@ -17,7 +17,7 @@ def calcMinEuclideanDistance(points):
     points (p1, p2,...,pn): X,Y coordinates
     This code will refer to the following formula: d= SQRT((X_2 - X_1)^2 + (Y_2 - Y_1)^2)
     """
-    min_dist = float("inf")     # Start w/ an inifinite distance as min
+    min_dist = float("inf")     # Start w/ an infinite distance as min
 
     # Iterate through all Point-Pairs
     for i in range(len(points)):
@@ -28,7 +28,7 @@ def calcMinEuclideanDistance(points):
             dx_squared = dx*dx
             dy_squared = dy*dy
 
-            d = math.sqrt(dx_squared + dy_squared)   # Replace with Euclidean Distance Formula
+            d = math.sqrt((dx_squared) + (dy_squared))   # Replace with Euclidean Distance Formula
 
             if d < min_dist:
                 min_dist = d
