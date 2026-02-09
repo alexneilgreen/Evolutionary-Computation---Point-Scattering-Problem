@@ -25,6 +25,8 @@ def setup_directories():
 
 def main():
     """Main function of the script."""
+    # n values for experiment
+    N = [10, 25, 5]
     
     args = parser.parse_args()
     
