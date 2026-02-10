@@ -7,10 +7,15 @@ Each implementation has it's own file in order to setup DEAP framework
 independently of each other. Common functions that are used in more 
 than one implementation are stored within the utility.py file.
 """
-# Standard libraries or third-party packages
 
+"""
+Resources:
+DEAP Setup - https://deap.readthedocs.io/en/master/examples/ga_onemax.html
+DEAP Functions - https://deap.readthedocs.io/en/master/api/tools.html
+"""
+
+# Standard libraries or third-party packages
 import argparse
-from email import parser
 import os
 import random
 import numpy as np
@@ -25,8 +30,16 @@ def setup_directories():
 
 def main():
     """Main function of the script."""
-    # n values for experiment
-    N = [10, 25, 5]
+    parser = argparse.ArgumentParser(
+        description='Point Scattering Problem - GA Comparison of Three Representations'
+    )
+
+    parser.add_argument('--n', type=int, default=5,                     # Set third custom n value
+                        help='Number of points to place (default: 5)')
+    parser.add_argument('--indpb', type=float, default=0.2,             # Set indpb value
+                        help='Independent probability for mutating each gene (default: 0.2)')
+    parser.add_argument('--seed', type=int, default=42,                 # Set seed value (shouldn't change)
+                        help='Random seed for reproducibility (default: 42)')
     
     args = parser.parse_args()
     
@@ -36,7 +49,7 @@ def main():
     # Set seed
     random.seed(args.seed)
     np.random.seed(args.seed)
-
+    
     # Run Cartesian Implementation
     print("===== Cartesian Implementation (x, y) =====\n")
     cartesian.run(args)
