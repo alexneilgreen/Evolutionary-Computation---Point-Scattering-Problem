@@ -21,6 +21,7 @@ from implementations import cartesian, polar, boundary
 def in_unitCircle(x, y):
     return (x*x) + (y*y) <= 1
 
+# Calculates using Cartesian Points
 def calcMinEuclideanDistance(points):
     """
     Calculates the minimum Euclidean distance between all Point-Pairs
@@ -38,7 +39,36 @@ def calcMinEuclideanDistance(points):
             dx_squared = dx*dx
             dy_squared = dy*dy
 
-            d = math.sqrt((dx_squared) + (dy_squared))   # Euclidean Distance Formula
+            # Euclidean Distance Formula
+            d = math.sqrt((dx_squared) + (dy_squared))
+
+            if d < min_dist:
+                min_dist = d
+
+    return (min_dist,)
+
+# Calculates using Polar Points
+def calcMinEuclideanDistancePolar(points):
+    """
+    Calculates the minimum Euclidean distance between all Point-Pairs
+    points (p1, p2,...,pn): r,theta coordinates
+    This code will refer to the following formula: d= SQRT(r1^2 + r2^2 - 2*r1*r2*cos(theta2 - theta1)
+    """
+    min_dist = float("inf")     # Start w/ infinite distance as min
+
+    # Iterate through all Point-Pairs
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)): # i+1, to not include current point
+            r1 = points[i][0]
+            theta1 = points[i][1]
+            r2 = points[j][0]
+            theta2 = points[j][1]
+
+            r1_squared = r1 * r1
+            r2_squared = r2 * r2
+            
+            # Euclidean Distance Formula
+            d = math.sqrt(r1_squared + r2_squared - (2*r1*r2*math.cos(theta1-theta2)))
 
             if d < min_dist:
                 min_dist = d
@@ -58,23 +88,6 @@ def polar_to_cart(ind):
         
         x = r * math.cos(theta)
         y = r * math.sin(theta)
-        
-        conversion.append((x, y))
-    
-    return conversion
-
-# Converts Boundary coord to Cartesian
-def boundary_to_cart(ind):
-    """
-    Formula (r=1): (cos(theta), sin(theta))
-    
-    Same formula as above but only 1 input variable (theta)
-    """
-    conversion = []
-    
-    for theta in ind:
-        x = math.cos(theta)
-        y = math.sin(theta)
         
         conversion.append((x, y))
     

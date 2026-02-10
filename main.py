@@ -54,21 +54,21 @@ def main():
     print("===== Cartesian Implementation (x, y) =====\n")
     cartesian.run(args)
     
-    # # Set seed
-    # random.seed(args.seed)
-    # np.random.seed(args.seed)
+    # Set seed
+    random.seed(args.seed)
+    np.random.seed(args.seed)
     
-    # # Run Polar Implementation
-    # print("===== Polar Implementation (r, θ) =====\n")
-    # polar.run(args)
+    # Run Polar Implementation
+    print("===== Polar Implementation (r, θ) =====\n")
+    polar.run(args)
 
-    # # Set seed
-    # random.seed(args.seed)
-    # np.random.seed(args.seed)
+    # Set seed
+    random.seed(args.seed)
+    np.random.seed(args.seed)
     
-    # # Run Custom Boundary Implementation
-    # print("===== Boundary Implementation (θ) =====\n")
-    # boundary.run(args)
+    # Run Custom Boundary Implementation
+    print("===== Boundary Implementation (θ) =====\n")
+    boundary.run(args)
 
 if __name__ == "__main__":
     main()
