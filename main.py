@@ -7,10 +7,15 @@ Each implementation has it's own file in order to setup DEAP framework
 independently of each other. Common functions that are used in more 
 than one implementation are stored within the utility.py file.
 """
-# Standard libraries or third-party packages
 
+"""
+Resources:
+DEAP Setup - https://deap.readthedocs.io/en/master/examples/ga_onemax.html
+DEAP Functions - https://deap.readthedocs.io/en/master/api/tools.html
+"""
+
+# Standard libraries or third-party packages
 import argparse
-from email import parser
 import os
 import random
 import numpy as np
