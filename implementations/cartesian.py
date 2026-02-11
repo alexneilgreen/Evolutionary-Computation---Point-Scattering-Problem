@@ -30,7 +30,7 @@ def init_cartesian_ind(n):
         # Check in the unit circle
         if utility.in_unitCircle(x, y):
             # we can append to coordinates to our ind list
-            ind.append((x,y))   # ind + 1
+            ind.append((x, y))   # ind + 1
     return ind
 
 # Mutate the current population
