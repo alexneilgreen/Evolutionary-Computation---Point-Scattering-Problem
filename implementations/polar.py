@@ -41,7 +41,7 @@ def init_polar_ind(n):
     return ind
 
 # Mutate the current population
-def mutate_polar_ind(ind, indpb=0.05):
+def mutate_polar_ind(ind, indpb=0.2):
     """
     ind: Individual of cart representatiom
     indpb: Individual's probability of experiencing mutation
@@ -51,8 +51,8 @@ def mutate_polar_ind(ind, indpb=0.05):
         if random.random() < indpb:
             # Mutate by picking random values
             # Must ensure it is within the unit circle
-            r = random.uniform(0, 1)
-            theta = random.uniform(0, 2*math.pi)
+            r = random.uniform(0, 1)             
+            theta = random.uniform(0, 2*math.pi)    
 
             ind[mutant] = (r, theta)    # Assign the mutant in ind list its new r and theta
     
@@ -65,7 +65,6 @@ def run(args):
     # Use Standard Config from Utitilty
     cfg = utility.Config()
 
-    #! DEAP CREATORS CONFUSE ME???
     # DEAP creator setup
     if not hasattr(creator, "FitnessMax"):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -76,10 +75,10 @@ def run(args):
     # Setup toolbox
     toolbox = base.Toolbox()
     toolbox.register("individual", tools.initIterate, creator.Individual, 
-                     lambda: init_polar_ind(args.n))
+                     lambda: init_polar_ind(args.n))                            # links and creates individuals using custom function
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("evaluate", utility.calcMinEuclideanDistancePolar)
-    toolbox.register("mate", tools.cxUniform, indpb=0.5)  # Uniform crossover
+    toolbox.register("mate", tools.cxUniform, indpb=0.5)                        # Uniform crossover (Book Pg.71)
     toolbox.register("mutate", mutate_polar_ind, indpb=args.indpb)
     toolbox.register("select", tools.selTournament, tournsize=cfg.tournsize)
 

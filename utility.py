@@ -14,8 +14,6 @@ from deap import base, creator, tools       # DEAP and helpers
 # Local Imports
 from implementations import cartesian, polar, boundary
 
-
-
 # ===================== MATHEMATICAL FORMULAS =====================
 # Insert commonly used functions here.
 def in_unitCircle(x, y):
@@ -68,7 +66,7 @@ def calcMinEuclideanDistancePolar(points):
             r2_squared = r2 * r2
             
             # Euclidean Distance Formula
-            d = math.sqrt(r1_squared + r2_squared - (2*r1*r2*math.cos(theta1-theta2)))
+            d = math.sqrt(r1_squared + r2_squared - (2*r1*r2*math.cos(theta1 - theta2)))
 
             if d < min_dist:
                 min_dist = d
@@ -96,7 +94,6 @@ def polar_to_cart(ind):
 
 
 # ===================== Plotting =====================
-
 # Plot fitness (minimum distance) over generations
 def plot_fitness_log(log, title, filename):
     generations = []
@@ -185,13 +182,12 @@ def plot_point_distribution(points, title, filename):
 
 
 # ===================== GA Configuration Dataclass =====================
-
 # Configuration dataclass
 @dataclass(frozen=True)         # Parameters cant be changed during runs
 class Config:
     pop_size: int = 200         # 200 individuals
     generations: int = 200      # Allowed generations
-    cxpb: float = 0.7           # crossover prob
+    cxpb: float = 0.8           # crossover prob
     mutpb: float = 0.2          # mutation probability
     tournsize: int = 3          # For tournament slection
     seed: Optional[int] = None

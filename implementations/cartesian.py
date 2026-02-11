@@ -34,7 +34,7 @@ def init_cartesian_ind(n):
     return ind
 
 # Mutate the current population
-def mutate_cartesian_ind(ind, indpb=0.05):
+def mutate_cartesian_ind(ind, indpb=0.2):
     """
     ind: Individual of cart representatiom
     indpb: Individual's probability of experiencing mutation
@@ -61,7 +61,6 @@ def run(args):
     # Use Standard Config from Utitilty
     cfg = utility.Config()
 
-    #! DEAP CREATORS CONFUSE ME???
     # DEAP creator setup
     if not hasattr(creator, "FitnessMax"):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -72,10 +71,10 @@ def run(args):
     # Setup toolbox
     toolbox = base.Toolbox()
     toolbox.register("individual", tools.initIterate, creator.Individual, 
-                     lambda: init_cartesian_ind(args.n))
+                     lambda: init_cartesian_ind(args.n))                            # links and creates individuals using custom function
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("evaluate", utility.calcMinEuclideanDistance)
-    toolbox.register("mate", tools.cxUniform, indpb=0.5)  # Uniform crossover
+    toolbox.register("mate", tools.cxUniform, indpb=0.5)                            # Uniform crossover
     toolbox.register("mutate", mutate_cartesian_ind, indpb=args.indpb)
     toolbox.register("select", tools.selTournament, tournsize=cfg.tournsize)
 

@@ -17,7 +17,6 @@ import utility
 # 3. Mutating the individuals
 
 
-
 # Create n points within circle
 def init_boundary_ind(n):
     """
@@ -30,15 +29,16 @@ def init_boundary_ind(n):
 
     # Fill the list with n valid individuals
     while len(ind) < n:
-        # Assign random coorindates for r between 0 and 2*pi
-        theta = random.uniform(0, 2*math.pi)
+        r = 1       # Always this, because we are 1D, caring only about the angle
+        # Assign random coorindates for theta between 0 and 2*pi
+        theta = random.uniform(0, 2*math.pi) 
 
         # Append to coordinates to our ind list
-        ind.append((1, theta))
+        ind.append((r, theta))
     return ind
 
 # Mutate the current population
-def mutate_boundary_ind(ind, indpb=0.05):
+def mutate_boundary_ind(ind, indpb=0.2):
     """
     ind: Individual of cart representatiom
     indpb: Individual's probability of experiencing mutation
@@ -47,7 +47,7 @@ def mutate_boundary_ind(ind, indpb=0.05):
         # Should we mutate
         if random.random() < indpb:
             # Mutate by picking random values
-            theta = random.uniform(0, 2*math.pi)
+            theta = random.uniform(0, 2*math.pi)                    # Additional mutation op: + random.gauss(0, 0.2) % (2 * math.pi)
 
             ind[mutant] = (1, theta)    # Assign the mutant in ind list its new theta
     
@@ -60,7 +60,6 @@ def run(args):
     # Use Standard Config from Utitilty
     cfg = utility.Config()
 
-    #! DEAP CREATORS CONFUSE ME???
     # DEAP creator setup
     if not hasattr(creator, "FitnessMax"):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
