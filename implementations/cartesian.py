@@ -4,11 +4,12 @@ This is the cartessian implementation for the Point-Scattering
 Problem.
 """
 # Standard libraries or third-party packages
-from dataclasses import asdict
-from typing import Any, Dict, List
-import numpy as np
 import random
+import numpy as np
+
+from typing import Any, Dict, List
 from deap import base, creator, tools
+from dataclasses import asdict
 
 # Local Imports
 import utility
@@ -62,6 +63,10 @@ def mutate_cartesian_ind(ind, indpb=0.2):
 def run_single(args):
     # Use Standard Config from Utitilty
     cfg = utility.Config()
+
+    # Each run needs a unique seed
+    random.seed(args.seed)
+    np.random.seed(args.seed)
 
     # DEAP creator setup
     if not hasattr(creator, "FitnessMax"):
@@ -192,7 +197,7 @@ def run_single(args):
     }
 
 # Multiple runs of the GA
-def run_experiment(args, n_runs: int = 50, seed_base: int = 12345) -> Dict[str, Any]:
+def run_experiment(args, n_runs: int = 25, seed_base: int = 12345) -> Dict[str, Any]:
     best_by_gen_all = []
     avg_by_gen_all = []
     best_overall_all = []

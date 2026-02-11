@@ -51,7 +51,7 @@ def main():
     random.seed(args.seed)
     np.random.seed(args.seed)
     
-    print("!!!! Running Experiment with 50 trials !!!!\n")
+    print("!!!! Running Experiment with 25 trials !!!!\n")
 
     # Run Cartesian Implementation
     print("===== Cartesian Implementation (x, y) =====")
@@ -64,7 +64,8 @@ def main():
     
     # Run Polar Implementation
     print("===== Polar Implementation (r, θ) =====")
-    polar.run(args)
+    polar_results = polar.run_experiment(args)
+    utility.print_results("Polar", polar_results)
 
     # Set seed
     random.seed(args.seed)
@@ -72,7 +73,8 @@ def main():
     
     # Run Custom Boundary Implementation
     print("===== Boundary Implementation (θ) =====")
-    boundary.run(args)
+    bound_results = boundary.run_experiment(args)
+    utility.print_results("Boundary", bound_results)
 
 if __name__ == "__main__":
     main()
