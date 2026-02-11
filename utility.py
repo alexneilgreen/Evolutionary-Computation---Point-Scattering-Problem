@@ -9,15 +9,15 @@ import math                                 # For calculations
 import numpy as np
 import matplotlib.pyplot as plt             # For plots
 from scipy import stats       
-
 from dataclasses import dataclass, asdict   # Used for the GA parameters
 from typing import List, Optional
-
 from deap import base, creator, tools       # DEAP and helpers
 
 
 # Local Imports
 from implementations import cartesian, polar, boundary
+
+
 
 # ===================== MATHEMATICAL FORMULAS =====================
 # Insert commonly used functions here.
@@ -96,6 +96,8 @@ def polar_to_cart(ind):
     
     return conversion
 
+
+
 # ===================== STATS =====================
 def mean_std_ci95(values: List[float]) -> tuple[float, float, tuple[float, float]]:
     """
@@ -148,6 +150,8 @@ def print_results(representation: str, results: dict):
     gen_m = gen_stats["mean"]
 
     print(f"Best mean fitness at final generation: {gen_m[-1]:.3f}")    # [-1] gets final item
+
+
 
 # ===================== Plotting =====================
 # Plot fitness (minimum distance) over generations

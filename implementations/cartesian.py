@@ -6,7 +6,6 @@ Problem.
 # Standard libraries or third-party packages
 import random
 import numpy as np
-
 from typing import Any, Dict, List
 from deap import base, creator, tools
 from dataclasses import asdict
