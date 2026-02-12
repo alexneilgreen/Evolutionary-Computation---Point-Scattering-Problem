@@ -13,11 +13,8 @@ from dataclasses import dataclass, asdict   # Used for the GA parameters
 from typing import List, Optional
 from deap import base, creator, tools       # DEAP and helpers
 
-
 # Local Imports
 from implementations import cartesian, polar, boundary
-
-
 
 # ===================== MATHEMATICAL FORMULAS =====================
 # Insert commonly used functions here.
@@ -238,7 +235,6 @@ def plot_point_distribution(points, title, filename):
     plt.tight_layout()
     plt.savefig(f'graphs/{filename}', dpi=300, bbox_inches='tight')
     plt.close()
-
 
 
 # ===================== GA Configuration Dataclass =====================

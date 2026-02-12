@@ -11,17 +11,8 @@ from typing import Any, Dict, List
 from deap import base, creator, tools
 from dataclasses import asdict
 
-
-
 # Local Imports
 import utility
-
-# Will need to handle for this specific representation
-# 1. Generating population of our individuals points 
-# 2. Evaluating Fitness level i.e maximum minimum-distance between point pairs
-# 3. Mutating the individuals
-
-
 
 # Create n points within circle
 def init_polar_ind(n):
@@ -92,11 +83,6 @@ def run_single(args):
 
     # Create initial popultation
     population = toolbox.population(n=cfg.pop_size)
-
-    # Plot initial point locations
-    # initial_individual_cartesian = utility.polar_to_cart(population[0])   # Convert to cartesian before plotting
-    # utility.plot_point_distribution(initial_individual_cartesian, title=f"Initial Population (n={args.n})",
-    #     filename=f"polar_n{args.n}_initial.png")
 
     # Evaluate initial population
     fitnesses = map(toolbox.evaluate, population)
@@ -183,18 +169,6 @@ def run_single(args):
     best_individual = tools.selBest(population, 1)[0]
     best_fitness = best_individual.fitness.values[0]
 
-    # Plot final point locations
-    # final_individual_cartesian = utility.polar_to_cart(population[0])   # Convert to cartesian before plotting
-    # utility.plot_point_distribution(final_individual_cartesian, title=f"Final Population (n={args.n})",
-    #     filename=f"polar_n{args.n}_final.png")
-    
-    # print(f"\tFinal Best Minimum Distance: {best_fitness:.6f}\n")
-    
-    # # Plot results
-    # title = f"Polar Representation (n={args.n})"
-    # filename = f"polar_n{args.n}_gen{cfg.generations}.png"
-    # utility.plot_fitness_log(log, title, filename)
-    # return info for stat
     return {
         "best_by_gen": best_by_gen,
         "avg_by_gen": avg_by_gen,

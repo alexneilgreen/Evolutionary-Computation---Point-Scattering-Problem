@@ -13,8 +13,6 @@ from dataclasses import asdict
 # Local Imports
 import utility
 
-
-
 # Create n points within circle
 def init_cartesian_ind(n):
     """
@@ -86,10 +84,6 @@ def run_single(args):
 
     # Create initial popultation
     population = toolbox.population(n=cfg.pop_size)
-
-    # Plot initial point locations
-    # utility.plot_point_distribution(population[0], title=f"Initial Population (n={args.n})",
-    #     filename=f"cartesian_n{args.n}_initial.png")
 
     # Evaluate initial population
     fitnesses = map(toolbox.evaluate, population)
@@ -174,17 +168,6 @@ def run_single(args):
     # Final best solution found in this run
     best_individual = tools.selBest(population, 1)[0]
     best_fitness = best_individual.fitness.values[0]
-
-    # Plot final point locations
-    # utility.plot_point_distribution(population[0], title=f"Final Population (n={args.n})",
-    #     filename=f"cartesian_n{args.n}_final.png")
-    
-    # print(f"\tFinal Best Minimum Distance: {best_fitness:.6f}\n")
-    
-    # Plot results
-    # title = f"Cartesian Representation (n={args.n})"
-    # filename = f"cartesian_n{args.n}_gen{cfg.generations}.png"
-    # utility.plot_fitness_log(log, title, filename)
 
     # return info for stat
     return {
