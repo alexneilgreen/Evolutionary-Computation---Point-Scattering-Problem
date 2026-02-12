@@ -1,3 +1,6 @@
 deap
 numpy
 matplotlib
+scipy
+dataclasses
+typing

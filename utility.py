@@ -5,16 +5,16 @@ functions are stored for our Point-Scattering
 Problem implementations.
 """
 # Standard libraries or third-party packages
-from dataclasses import dataclass, asdict   # Used for the GA parameters
-from typing import Optional
 import math                                 # For calculations
+import numpy as np
 import matplotlib.pyplot as plt             # For plots
+from scipy import stats       
+from dataclasses import dataclass, asdict   # Used for the GA parameters
+from typing import List, Optional
 from deap import base, creator, tools       # DEAP and helpers
 
 # Local Imports
 from implementations import cartesian, polar, boundary
-
-
 
 # ===================== MATHEMATICAL FORMULAS =====================
 # Insert commonly used functions here.
@@ -68,7 +68,7 @@ def calcMinEuclideanDistancePolar(points):
             r2_squared = r2 * r2
             
             # Euclidean Distance Formula
-            d = math.sqrt(r1_squared + r2_squared - (2*r1*r2*math.cos(theta1-theta2)))
+            d = math.sqrt(r1_squared + r2_squared - (2*r1*r2*math.cos(theta1 - theta2)))
 
             if d < min_dist:
                 min_dist = d
@@ -95,8 +95,62 @@ def polar_to_cart(ind):
 
 
 
-# ===================== Plotting =====================
+# ===================== STATS =====================
+def mean_std_ci95(values: List[float]) -> tuple[float, float, tuple[float, float]]:
+    """
+    Statistical information for final fitness
+    """
+    arr = np.array(values)
+    n = len(arr)                # Sample size
+    mean = float(np.mean(arr))
+    std = float(np.std(arr, ddof=1))
+    
+    # Calculate 95% CI using the t-distribution
+    # df = degrees of freedom (n-1)
+    # loc = sample mean
+    # scale = standard error of the sample mean
+    sem = stats.sem(arr)
+    ci_low, ci_high = stats.t.interval(confidence=0.95, df=n-1, loc=mean, scale=sem)
+    
+    return mean, std, (ci_low, ci_high)
 
+def per_gen_mean_ci(series_2d: List[List[float]]):      
+    arr = np.array(series_2d, dtype=float)
+    n = arr.shape[0]            
+    mean = np.mean(arr, axis=0)
+
+    # Calculate standard error along axis 0
+    sem = stats.sem(arr, axis=0)
+
+    # Calculate 95% CI for the whole array at once
+    # This returns two arrays: (Lower Bounds, Upper Bounds)
+    ci_low, ci_high = stats.t.interval(confidence=0.95, df=n-1, loc=mean, scale=sem)
+    
+    return mean, ci_low, ci_high
+
+def print_results(representation: str, results: dict):
+    print(f"Printing {representation} results........")
+    # Prints the final stat results
+    stats = results["final_stats"]
+    mean_f = stats["mean"]
+    std_f = stats["std"]
+    CI_low, CI_high = stats["CI95"]
+    best_overall_fitness = max(results["best_overall_all"])
+
+    print(f"\n{representation} final stats:")
+    print(f"MEAN: {mean_f:.3f}")
+    print(f"STD: {std_f:.3f}")
+    print(f"95% Confidence Interval: {CI_low:.3f}, {CI_high:.3f}")
+    print(f"\tFinal Best Minimum Distance: {best_overall_fitness:.6f}\n")
+
+    gen_stats = results["gen_stats"]
+    gen_m = gen_stats["mean"]
+
+    print(f"Best mean fitness at final generation: {gen_m[-1]:.3f}")    # [-1] gets final item
+
+
+
+# ===================== Plotting =====================
 # Plot fitness (minimum distance) over generations
 def plot_fitness_log(log, title, filename):
     generations = []
@@ -183,15 +237,13 @@ def plot_point_distribution(points, title, filename):
     plt.close()
 
 
-
 # ===================== GA Configuration Dataclass =====================
-
 # Configuration dataclass
 @dataclass(frozen=True)         # Parameters cant be changed during runs
 class Config:
     pop_size: int = 200         # 200 individuals
     generations: int = 200      # Allowed generations
-    cxpb: float = 0.7           # crossover prob
+    cxpb: float = 0.8           # crossover prob
     mutpb: float = 0.2          # mutation probability
     tournsize: int = 3          # For tournament slection
     seed: Optional[int] = None

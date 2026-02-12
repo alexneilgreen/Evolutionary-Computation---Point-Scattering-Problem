@@ -4,19 +4,15 @@ This is the polar implementation for the Point-Scattering
 Problem.
 """
 # Standard libraries or third-party packages
-import random
 import math
+import random
+import numpy as np
+from typing import Any, Dict, List
 from deap import base, creator, tools
+from dataclasses import asdict
 
 # Local Imports
 import utility
-
-# Will need to handle for this specific representation
-# 1. Generating population of our individuals points 
-# 2. Evaluating Fitness level i.e maximum minimum-distance between point pairs
-# 3. Mutating the individuals
-
-
 
 # Create n points within circle
 def init_polar_ind(n):
@@ -41,7 +37,7 @@ def init_polar_ind(n):
     return ind
 
 # Mutate the current population
-def mutate_polar_ind(ind, indpb=0.05):
+def mutate_polar_ind(ind, indpb=0.2):
     """
     ind: Individual of cart representatiom
     indpb: Individual's probability of experiencing mutation
@@ -51,8 +47,8 @@ def mutate_polar_ind(ind, indpb=0.05):
         if random.random() < indpb:
             # Mutate by picking random values
             # Must ensure it is within the unit circle
-            r = random.uniform(0, 1)
-            theta = random.uniform(0, 2*math.pi)
+            r = random.uniform(0, 1)             
+            theta = random.uniform(0, 2*math.pi)    
 
             ind[mutant] = (r, theta)    # Assign the mutant in ind list its new r and theta
     
@@ -60,12 +56,14 @@ def mutate_polar_ind(ind, indpb=0.05):
     return (ind,)
 
 # Polar Implementation
-def run(args):
-
+def run_single(args):
     # Use Standard Config from Utitilty
     cfg = utility.Config()
 
-    #! DEAP CREATORS CONFUSE ME???
+    # Each run needs a unique seed
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+
     # DEAP creator setup
     if not hasattr(creator, "FitnessMax"):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -76,20 +74,15 @@ def run(args):
     # Setup toolbox
     toolbox = base.Toolbox()
     toolbox.register("individual", tools.initIterate, creator.Individual, 
-                     lambda: init_polar_ind(args.n))
+                     lambda: init_polar_ind(args.n))                            # links and creates individuals using custom function
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("evaluate", utility.calcMinEuclideanDistancePolar)
-    toolbox.register("mate", tools.cxUniform, indpb=0.5)  # Uniform crossover
+    toolbox.register("mate", tools.cxUniform, indpb=0.5)                        # Uniform crossover (Book Pg.71)
     toolbox.register("mutate", mutate_polar_ind, indpb=args.indpb)
     toolbox.register("select", tools.selTournament, tournsize=cfg.tournsize)
 
     # Create initial popultation
     population = toolbox.population(n=cfg.pop_size)
-
-    # Plot initial point locations
-    initial_individual_cartesian = utility.polar_to_cart(population[0])   # Convert to cartesian before plotting
-    utility.plot_point_distribution(initial_individual_cartesian, title=f"Initial Population (n={args.n})",
-        filename=f"polar_n{args.n}_initial.png")
 
     # Evaluate initial population
     fitnesses = map(toolbox.evaluate, population)
@@ -98,6 +91,21 @@ def run(args):
 
     # Track Performance of Generations
     log = []
+
+    best_by_gen: List[float] = []
+    avg_by_gen: List[float] = []
+
+    def record(gen_idx: int) -> None:
+        """ Records the best and avg pop fitness for this gen"""
+        fits = [ind.fitness.values[0] for ind in population]
+        best = max(fits)
+        avg = float(np.mean(fits))
+
+        # Append best and average of each gen to the list
+        best_by_gen.append(best)
+        avg_by_gen.append(avg)
+
+    record(0)
 
     # Open log file
     log_filename = f"logs/polar_n{args.n}_gen{cfg.generations}.txt"
@@ -151,6 +159,7 @@ def run(args):
             
             # Record performance
             log.append((gen, best_fitness))
+            record(gen)
             
             # Convert to Cartesian and Log this generation
             best_ind_cart = utility.polar_to_cart(best_ind)
@@ -160,14 +169,68 @@ def run(args):
     best_individual = tools.selBest(population, 1)[0]
     best_fitness = best_individual.fitness.values[0]
 
-    # Plot final point locations
-    final_individual_cartesian = utility.polar_to_cart(population[0])   # Convert to cartesian before plotting
-    utility.plot_point_distribution(final_individual_cartesian, title=f"Final Population (n={args.n})",
-        filename=f"polar_n{args.n}_final.png")
-    
-    print(f"\tFinal Best Minimum Distance: {best_fitness:.6f}\n")
-    
-    # Plot results
+    return {
+        "best_by_gen": best_by_gen,
+        "avg_by_gen": avg_by_gen,
+        "best_individual": best_individual, # polar still
+        "best_overall_fitness": best_fitness,
+        "config": asdict(cfg)       # Current GA settings
+    }
+
+# Multiple runs of the GA
+def run_experiment(args, n_runs: int = 25, seed_base: int = 12345) -> Dict[str, Any]:
+    best_by_gen_all = []
+    avg_by_gen_all = []
+    best_overall_all = []
+
+    # Tracking global best results
+    best_run_curve = None
+    best_ind = None
+    best_ind_fitness = -float("inf")
+
+    for i in range(n_runs):
+        # print(f"Run {i}")
+        args.seed = seed_base + i   # Creates a unique cfg for each run
+        cur_run = run_single(args)
+
+        # Extract the data from current run
+        best_by_gen_all.append(cur_run["best_by_gen"])
+        avg_by_gen_all.append(cur_run["avg_by_gen"])
+        best_overall_all.append(cur_run["best_overall_fitness"])
+
+        # Track the best fitness individual as encountered
+        if cur_run["best_overall_fitness"] > best_ind_fitness:
+            # Best found is current run
+            best_run_curve = cur_run["best_by_gen"]
+            best_ind = cur_run["best_individual"]
+            best_ind_fitness = cur_run["best_overall_fitness"]
+ 
+    gen_mean, gen_CI_low, gen_CI_high = utility.per_gen_mean_ci(best_by_gen_all)
+    mean_f, std_f, CI = utility.mean_std_ci95(best_overall_all)
+
+    # Plot best results
     title = f"Polar Representation (n={args.n})"
-    filename = f"polar_n{args.n}_gen{cfg.generations}.png"
-    utility.plot_fitness_log(log, title, filename)
+    filename = f"polar_n{args.n}_best_run.png"
+    utility.plot_fitness_log(list(enumerate(best_run_curve)), title, filename)
+
+    # Polar -> Cart 
+    best_ind_cart = utility.polar_to_cart(best_ind)
+    # Plot final point locations
+    utility.plot_point_distribution(best_ind_cart, title=f"Final Population (n={args.n})",
+        filename=f"polar_n{args.n}_best_final.png")
+
+    return {
+        "n_runs": n_runs,
+        "best_by_gen_all": best_by_gen_all,
+        "avg_by_gen_all": avg_by_gen_all,
+        "best_overall_all": best_overall_all,
+        "final_stats": {
+            "mean": mean_f, 
+            "std":std_f, 
+            "CI95": CI
+        },
+        "gen_stats": {
+            "mean": gen_mean,
+            "CI95": (gen_CI_low, gen_CI_high)
+        }
+    }

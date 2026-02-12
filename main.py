@@ -22,6 +22,7 @@ import numpy as np
 
 # Local Imports
 from implementations import cartesian, polar, boundary
+import utility
 
 def setup_directories():
     """Create necessary directories for outputs"""
@@ -50,25 +51,30 @@ def main():
     random.seed(args.seed)
     np.random.seed(args.seed)
     
+    print("!!!! Running Experiment with 25 trials !!!!\n")
+
     # Run Cartesian Implementation
-    print("===== Cartesian Implementation (x, y) =====\n")
-    cartesian.run(args)
+    print("===== Cartesian Implementation (x, y) =====")
+    cart_results = cartesian.run_experiment(args)
+    utility.print_results("Cartesian", cart_results)
     
     # Set seed
     random.seed(args.seed)
     np.random.seed(args.seed)
     
     # Run Polar Implementation
-    print("===== Polar Implementation (r, θ) =====\n")
-    polar.run(args)
+    print("===== Polar Implementation (r, θ) =====")
+    polar_results = polar.run_experiment(args)
+    utility.print_results("Polar", polar_results)
 
     # Set seed
     random.seed(args.seed)
     np.random.seed(args.seed)
     
     # Run Custom Boundary Implementation
-    print("===== Boundary Implementation (θ) =====\n")
-    boundary.run(args)
+    print("===== Boundary Implementation (θ) =====")
+    bound_results = boundary.run_experiment(args)
+    utility.print_results("Boundary", bound_results)
 
 if __name__ == "__main__":
     main()
